@@ -1,12 +1,19 @@
-import "dotenv/config";
-import cron from "node-cron";
 import { searchYouTube } from "./lib/youtube.js";
 import { pickUnseenVideos } from "./lib/filter.js";
 import { saveVideo } from "./lib/storage.js";
 import { sendTelegramMessage } from "./lib/notify.js";
 import { escapeMarkdown } from "./lib/escapeMarkdown.js";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 export async function sendMorningThree() {
+  const { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } = process.env;
+
+  if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
+    throw new Error("TELEGRAM_BOT_TOKEN or TELEGRAM_CHAT_ID is missing.");
+  }
+
   const videos = await searchYouTube();
 
   if (!videos || videos.length === 0) {
@@ -20,9 +27,9 @@ export async function sendMorningThree() {
   const toSend = await pickUnseenVideos(videos, 3);
 
   if (!toSend || toSend.length === 0) {
-    // await sendTelegramMessage(
-    //   "☕ Morning Cup of Code — no *new* videos today. I'll try again tomorrow."
-    // );
+    await sendTelegramMessage(
+      "☕ Morning Cup of Code — no *new* videos today. I'll try again tomorrow."
+    );
     return;
   }
 
@@ -52,6 +59,7 @@ export async function sendMorningThree() {
   }
 }
 
-cron.schedule("0 8 * * *", async () => {
-  await sendMorningThree();
+sendMorningThree().then(() => {
+  console.log("Finished.");
+  process.exit(0);
 });
