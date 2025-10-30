@@ -36,4 +36,4 @@ jobs:
           git config --local user.email "action@github.com"
           git add data/videos.json
           git diff --quiet && echo "No changes to commit" || git commit -m "Update video history"
-          git push
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
