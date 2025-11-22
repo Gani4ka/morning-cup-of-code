@@ -1,4 +1,4 @@
-import { searchYouTube } from "./lib/youtube.js";
+import { searchYouTube, searchYouTubeFavoriteChanels } from "./lib/youtube.js";
 import { pickUnseenVideos } from "./lib/filter.js";
 import { saveVideo } from "./lib/storage.js";
 import { sendTelegramMessage } from "./lib/notify.js";
@@ -15,6 +15,7 @@ export async function sendMorningThree() {
   }
 
   const videos = await searchYouTube();
+  const favoriteVideos = await searchYouTubeFavoriteChanels();
 
   if (!videos || videos.length === 0) {
     console.log("No videos found.");
@@ -24,7 +25,7 @@ export async function sendMorningThree() {
     return;
   }
 
-  const toSend = await pickUnseenVideos(videos, 3);
+  const toSend = await pickUnseenVideos([ ...favoriteVideos, ...videos], 6);
 
   if (!toSend || toSend.length === 0) {
     await sendTelegramMessage(

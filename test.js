@@ -1,9 +1,10 @@
-import { searchYouTube } from "./lib/youtube.js";
+import { searchYouTube, searchYouTubeFavoriteChanels } from "./lib/youtube.js";
 
 const topic = "JavaScript tutorial";
 const run = async () => {
   try {
-    const results = await searchYouTube(topic);
+    const results = await searchYouTubeFavoriteChanels(
+    );
     console.log("✅ Found videos:");
     results.forEach((v, i) => {
       console.log(
@@ -18,3 +19,5 @@ const run = async () => {
 };
 
 run();
+
+
