@@ -8,6 +8,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 export async function sendMorningThree() {
+  return; // Temporarily disable sending morning videos
+
   const { TELEGRAM_BOT_TOKEN, TELEGRAM_CHAT_ID } = process.env;
 
   if (!TELEGRAM_BOT_TOKEN || !TELEGRAM_CHAT_ID) {
@@ -25,7 +27,7 @@ export async function sendMorningThree() {
     return;
   }
 
-  const toSend = await pickUnseenVideos([ ...favoriteVideos, ...videos], 6);
+  const toSend = await pickUnseenVideos([...favoriteVideos, ...videos], 6);
 
   if (!toSend || toSend.length === 0) {
     await sendTelegramMessage(
